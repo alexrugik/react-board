@@ -4,6 +4,7 @@ import { DraggableItem } from '../draggable-item/draggable-item';
 import { boardStore } from '../../store/board';
 import { BoardItem } from '../../reducers/board';
 import { updateItem } from '../../actions/board';
+import { Unsubscribe } from 'redux';
 
 interface BoardState {
   draggableItems: BoardItem[];
@@ -22,6 +23,7 @@ export class Board extends React.Component<BoardProps> {
   public state: BoardState = {
     draggableItems: []
   };
+  private subscriptions: any[] = [];
 
   constructor(props: Readonly<BoardProps>) {
     super(props);
@@ -33,6 +35,10 @@ export class Board extends React.Component<BoardProps> {
       .setState({
         draggableItems: boardStore.getState()
       });
+  }
+
+  componentWillUnmount(): void {
+    this.subscriptions.forEach((subscription: Unsubscribe) => subscription);
   }
 
   onDrop($event: React.DragEvent<HTMLDivElement>) {
@@ -73,14 +79,16 @@ export class Board extends React.Component<BoardProps> {
   }
 
   private subscribeToDraggableItemsStore() {
-    boardStore
-      .subscribe(
-        () => {
-          this.setState({
-            draggableItems: boardStore.getState()
-          });
-        }
-      );
+    this.subscriptions.push(
+      boardStore
+        .subscribe(
+          () => {
+            this.setState({
+              draggableItems: boardStore.getState()
+            });
+          }
+        )
+    );
     return this;
   }
 }

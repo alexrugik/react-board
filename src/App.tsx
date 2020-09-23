@@ -1,11 +1,18 @@
 import React from 'react';
 import './App.css';
-import { Board } from './shared/board/board';
+import { Board, BoardSettings } from './shared/board/board';
 
 function App() {
+  const boardSettings: BoardSettings = {
+    width: 400,
+    height: 400
+  };
+
   return (
     <div className="App">
-      <Board/>
+      <Board
+        settings={boardSettings}>
+      </Board>
     </div>
   );
 }

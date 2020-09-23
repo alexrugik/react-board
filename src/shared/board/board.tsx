@@ -9,12 +9,21 @@ interface BoardState {
   draggableItems: BoardItem[];
 }
 
-export class Board extends React.Component {
+export interface BoardSettings {
+  width: number;
+  height: number;
+}
+
+export interface BoardProps {
+  settings: BoardSettings;
+}
+
+export class Board extends React.Component<BoardProps> {
   public state: BoardState = {
     draggableItems: []
   };
 
-  constructor(props: any) {
+  constructor(props: Readonly<BoardProps>) {
     super(props);
   }
 
@@ -40,7 +49,6 @@ export class Board extends React.Component {
     );
   }
 
-
   onDragOver($event: React.DragEvent) {
     $event.preventDefault();
   }
@@ -48,16 +56,17 @@ export class Board extends React.Component {
   render() {
     return <div className="board"
                 id='board'
+                style={
+                  {
+                    width: this.props.settings.width,
+                    height: this.props.settings.height,
+                  }
+                }
                 onDragOver={this.onDragOver}
                 onDrop={this.onDrop.bind(this)}>
       {this.state.draggableItems.map((item: BoardItem, index) => {
-        return <DraggableItem key={index}
-                              id={item.id}
-                              height={item.height}
-                              width={item.width}
-                              backgroundColor={item.backgroundColor}
-                              x={item.x}
-                              y={item.y}>
+        return <DraggableItem key={item.id}
+                              settings={item}>
         </DraggableItem>;
       })}
     </div>;

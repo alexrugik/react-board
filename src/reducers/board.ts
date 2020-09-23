@@ -18,10 +18,9 @@ export function boardApp(state: BoardItem[] = initialState, action: UPDATE_ITEM_
   switch (action.type) {
     case UPDATE_ITEM: {
       return state.map(item => {
-        if (action.id === item.id) {
-          Object.assign(item, {x: action.x, y: action.y});
-        }
-        return item;
+        return action.id === item.id ?
+          Object.assign({}, item, {x: action.x, y: action.y}) :
+          item;
       });
     }
     default: {

@@ -7,13 +7,17 @@ interface DraggableItemState {
   y: number;
 }
 
-export class DraggableItem extends React.Component<BoardItem> {
+export interface DraggableItemProps {
+  settings: BoardItem
+}
+
+export class DraggableItem extends React.Component<DraggableItemProps> {
   public state: DraggableItemState = {
     x: 0,
     y: 0
   };
 
-  constructor(props: BoardItem) {
+  constructor(props: Readonly<DraggableItemProps>) {
     super(props);
   }
 
@@ -21,8 +25,8 @@ export class DraggableItem extends React.Component<BoardItem> {
     this.updateState();
   }
 
-  componentDidUpdate(prevProps: Readonly<BoardItem>, prevState: Readonly<{}>, snapshot?: any): void {
-    if (this.props.x !== prevProps.x || this.props.y !== prevProps.y) {
+  componentDidUpdate(prevProps: Readonly<DraggableItemProps>, prevState: Readonly<{}>, snapshot?: any): void {
+    if (this.props.settings.y !== prevProps.settings.y) {
       this.updateState();
     }
   }
@@ -38,19 +42,19 @@ export class DraggableItem extends React.Component<BoardItem> {
 
   private updateState() {
     this.setState({
-      x: this.props.x,
-      y: this.props.y
+      x: this.props.settings.x,
+      y: this.props.settings.y
     });
   }
 
   render() {
     return <div
-      id={this.props.id.toString()}
+      id={this.props.settings.id.toString()}
       style={
         {
-          width: this.props.width,
-          height: this.props.height,
-          backgroundColor: this.props.backgroundColor,
+          width: this.props.settings.width,
+          height: this.props.settings.height,
+          backgroundColor: this.props.settings.backgroundColor,
           left: this.state.x,
           top: this.state.y
         }
